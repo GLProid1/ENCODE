@@ -1,0 +1,83 @@
+{% extends "base.html" %} {% block title %}EnCode | Sign Up{% endblock %} {% block
+  content %}
+  <div class="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+    <div class="w-full max-w-md">
+      <div class="bg-white rounded-lg shadow-lg p-8">
+        <h1 class="text-2xl font-semibold text-center mb-6">Sign Up</h1>
+        <div class="bg-blue-50 border border-blue-100 rounded-lg p-3 mb-4">
+          <p class="text-blue-700 text-sm">
+            Please sign up to create your account.
+          </p>
+        </div>
+        <form method="POST">
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <div class="space-y-5">
+                <div class="relative">
+                  <label class="block text-sm font-medium text-gray-700 mb-1"
+                    >Full Name</label
+                  >
+                  <div class="relative">
+                    <span
+                      class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400"
+                      ><i class="fas fa-user"></i></span
+                    ><input
+                      type="text"
+                      name="Full Name"
+                      placeholder="Enter full name"
+                      class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-custom focus:border-custom"
+                    />
+                  </div>
+                </div>
+                <div class="relative mt-5">
+                  <label class="block text-sm font-medium text-gray-700 mb-1"
+                    >Username</label
+                  >
+                  <div class="relative">
+                    <span
+                      class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400"
+                      ><i class="fas fa-at"></i></span
+                    ><input
+                      type="text"
+                      name="Username"
+                      placeholder="Enter username"
+                      class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-custom focus:border-custom"
+                    />
+                  </div>
+                </div>
+                <div class="relative mt-5">
+                  <label class="block text-sm font-medium text-gray-700 mb-1"
+                    >Password</label
+                  >
+                  <div class="relative">
+                    <span
+                      class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400"
+                      ><i class="fas fa-lock"></i></span
+                    ><input
+                      type="password"
+                      name="Password"
+                      placeholder="Enter password"
+                      class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-custom focus:border-custom"
+                    />
+                  </div>
+                </div>
+                <button
+                  type="submit"
+                  class="w-full bg-custom text-white py-2 px-4 !rounded-button hover:bg-blue-600 transition duration-200 mt-5"
+                >
+                  Sign Up
+                </button>
+              </div>
+              <p class="mt-6 text-center text-sm text-gray-600">
+                <a href="/login" class="hover:text-blue-700 font-medium"
+                  >Already have an account?</a
+                >
+              </p>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  {% endblock %}
+  

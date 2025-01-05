@@ -1,0 +1,491 @@
+{% extends "home.html" %} {% block title %}Encode | Steganografi{% endblock %}
+{% block steganografi %}
+<main class="max-w-5xl">
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+    <div class="bg-white rounded-lg shadow p-6">
+      <h2 class="text-lg font-semibold mb-4">Encryption</h2>
+      <form
+        id="encrypt-form"
+        method="POST"
+        action="/Steganografi"
+        enctype="multipart/form-data"
+      >
+        <input type="hidden" name="action" value="encrypt" />
+        <div class="space-y-6">
+          <div
+            class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center"
+          >
+            <div class="space-y-2">
+              <i
+                id="upload-icon"
+                class="fas fa-cloud-upload-alt text-3xl text-gray-400"
+              ></i>
+              <div id="file-name" class="text-sm text-gray-600 hidden"></div>
+              <div class="text-sm text-gray-600">
+                <label
+                  class="relative cursor-pointer rounded-md font-medium text-custom hover:text-custom-600 focus-within:outline-none"
+                >
+                  <span>Upload an image</span>
+                  <input
+                    id="image-upload"
+                    type="file"
+                    class="sr-only"
+                    accept=".png,.jpg,.jpeg,.bmp"
+                    name="file"
+                    required
+                  />
+                </label>
+                <p class="pl-1">or drag and drop</p>
+              </div>
+              <p class="text-xs text-gray-500">PNG, BMP up to 10MB</p>
+            </div>
+            <div
+              id="file-upload-error"
+              class="text-red-500 text-sm mt-2 hidden"
+            >
+              Please upload a valid file (PNG, BMP) under 10MB
+            </div>
+          </div>
+          <div class="space-y-5">
+            <div>
+              <label class="block text-sm font-medium text-gray-700"
+                >Secret Message</label
+              >
+              <textarea
+                rows="4"
+                type="text"
+                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-custom focus:ring-custom sm:text-sm"
+                placeholder="Enter your secret message here..."
+                name="secret_message"
+                autocomplete="off"
+                required
+              ></textarea>
+            </div>
+            <div class="relative">
+              <label class="block text-sm font-medium text-gray-700"
+                >Encryption Key</label
+              >
+              <div class="flex items-center">
+                <input
+                  id="encryptionKeyInput"
+                  type="text"
+                  class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-custom focus:ring-custom sm:text-sm"
+                  placeholder="Enter encryption key"
+                  name="key"
+                  autocomplete="off"
+                  required
+                />
+                <button
+                  id="copyKeyButton"
+                  type="button"
+                  class="ml-2 px-3 py-1 bg-custom text-white rounded-md hover:bg-custom-600 focus: outline-none focus:ring-2 focus:ring-offset-2 focus:ring-custom"
+                >
+                  <i class="fas fa-copy"></i>
+                </button>
+                <span
+                  id="generateKeyLink"
+                  class="absolute text-gray-500 text-xs cursor-pointer hover:underline"
+                  style="bottom: -1.2rem; right: 0.5rem"
+                >
+                  Generate Key?<i class="fas fa-key"></i>
+                </span>
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700"
+                >AES Bit Selection</label
+              >
+              <select
+                id="aes-bit-selection"
+                name="aes_bit_selection"
+                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-custom focus:ring-custom sm:text-sm"
+              >
+                <option value="128">128-bit</option>
+                <option value="192">192-bit</option>
+                <option value="256">256-bit</option>
+              </select>
+            </div>
+            <button
+              class="w-full !rounded-button bg-custom px-4 py-2 text-white font-medium hover:bg-custom-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-custom"
+              type="submit"
+            >
+              <i class="fas fa-lock mr-2"></i>Encrypt
+            </button>
+            <div id="loading-indicator-encrypt" class="hidden text-center mt-4">
+              <i class="fas fa-spinner fa-spin text-custom text-xl"></i>
+              <p class="text-sm text-grey-500">Processing...</p>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <div class="bg-white rounded-lg shadow p-6">
+      <h2 class="text-lg font-semibold mb-4">Decryption</h2>
+      <form
+        id="decrypt-form"
+        method="POST"
+        action="/Steganografi"
+        enctype="multipart/form-data"
+      >
+        <input type="hidden" name="action" value="decrypt" />
+        <div class="space-y-6">
+          <div
+            class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center"
+          >
+            <div class="space-y-2">
+              <i
+                id="upload-icon2"
+                class="fas fa-cloud-upload-alt text-3xl text-gray-400"
+              ></i>
+              <div id="file-name2" class="text-sm text-gray-600 hidden"></div>
+              <div class="text-sm text-gray-600">
+                <label
+                  class="relative cursor-pointer rounded-md font-medium text-custom hover:text-custom-600 focus-within:outline-none"
+                >
+                  <span>Upload encrypted image</span>
+                  <input
+                    id="encrypted-image-upload"
+                    type="file"
+                    class="sr-only"
+                    accept=".png,.jpg,.jpeg,.bmp"
+                    name="file"
+                    required
+                  />
+                </label>
+                <p class="pl-1">or drag and drop</p>
+              </div>
+              <p class="text-xs text-gray-500">PNG, BMP up to 10MB</p>
+            </div>
+            <div
+              id="file-upload-error2"
+              class="text-red-500 text-sm mt-2 hidden"
+            >
+              Please upload a valid file (PNG, BMP) under 10MB
+            </div>
+          </div>
+          <div class="space-y-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700"
+                >Decryption Key</label
+              >
+              <input
+                type="text"
+                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-custom focus:ring-custom sm:text-sm"
+                placeholder="Enter decryption key"
+                name="key"
+                autocomplete="off"
+                required
+              />
+            </div>
+
+            <button
+              class="w-full !rounded-button bg-custom px-4 py-2 text-white font-medium hover:bg-custom-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-custom"
+              type="submit"
+            >
+              <i class="fas fa-unlock-alt mr-2"></i>Decrypt
+            </button>
+            <div id="loading-indicator-decrypt" class="hidden text-center mt-4">
+              <i class="fas fa-spinner fa-spin text-custom text-xl"></i>
+              <p class="text-sm text-grey-500">Processing...</p>
+            </div>
+            <div class="mt-4">
+              <label class="block text-sm font-medium text-gray-700"
+                >Decrypted Message</label
+              >
+              <div class="mt-1 p-4 bg-gray-50 rounded-md">
+                <p id="decrypted_message" class="text-sm text-gray-600">
+                  {{ request.args.get('decrypted_message', "Decrypted message
+                  will appear here...") }}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div class="mt-8 bg-white rounded-lg shadow p-6">
+    <h2 class="text-lg font-semibold mb-4">Status</h2>
+    <div class="flex items-center space-x-2 text-sm text-gray-600">
+      <i class="fas fa-info-circle text-custom"></i>
+      <span>Ready to process your request</span>
+    </div>
+  </div>
+</main>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const imageUpload = document.getElementById("image-upload");
+    const encryptedImageUpload = document.getElementById(
+      "encrypted-image-upload"
+    );
+    const fileUploadError = document.getElementById("file-upload-error");
+    const fileUploadError2 = document.getElementById("file-upload-error2");
+
+    function handleFileSelect(evt) {
+      const files = evt.target.files;
+      const validMimeTypes = ["image/png", "image/bmp"];
+      const errorElement =
+        evt.target.id === "image-upload" ? fileUploadError : fileUploadError2;
+
+      if (files.length > 0) {
+        const file = files[0];
+        console.log(`File size detected: ${file.size} bytes`);
+        // Cek ukuran file
+        if (file.size > 10 * 1024 * 1024) {
+          fileUploadError.textContent = "File size exceeds 10MB limit";
+          fileUploadError.classList.remove("hidden");
+          evt.target.value = ""; // Reset input
+
+          // Sembunyikan error setelah 5 detik
+          errorElement.errorTimeout = setTimeout(() => {
+            errorElement.classList.add("hidden");
+          }, 5000);
+          return;
+        }
+
+        // Cek tipe file
+        if (!validMimeTypes.includes(file.type)) {
+          errorElement.textContent =
+            "Invalid file type. Please upload PNG or BMP!";
+          errorElement.classList.remove("hidden");
+          evt.target.value = ""; // Reset input file
+
+          // Sembunyikan error setelah 5 detik
+          errorElement.errorTimeout = setTimeout(() => {
+            errorElement.classList.add("hidden");
+          }, 5000);
+          return;
+        }
+        fileUploadError.classList.add("hidden");
+      }
+    }
+    imageUpload.addEventListener("change", handleFileSelect);
+    encryptedImageUpload.addEventListener("change", handleFileSelect);
+  });
+  document.addEventListener("DOMContentLoaded", function () {
+    const encryptForm = document.querySelector("#encrypt-form"); // Add ID to your form
+    const decryptForm = document.querySelector("#decrypt-form"); // Add ID to your form
+    const loadingIndicatorEncrypt = document.getElementById(
+      "loading-indicator-encrypt"
+    );
+    const loadingIndicatorDecrypt = document.getElementById(
+      "loading-indicator-decrypt"
+    );
+
+    if (encryptForm) {
+      encryptForm.addEventListener("submit", function (event) {
+        event.preventDefault();
+
+        const formData = new FormData(encryptForm);
+        formData.append("action", "encrypt"); // Add action explicitly
+
+        loadingIndicatorEncrypt.classList.remove("hidden");
+
+        fetch("/Steganografi", {
+          method: "POST",
+          body: formData,
+        })
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error("Network response was not ok");
+            }
+            return response.blob();
+          })
+          .then((blob) => {
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = "encoded_" + formData.get("file").name;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            window.URL.revokeObjectURL(url);
+            loadingIndicatorEncrypt.classList.add("hidden");
+
+            // Reset formulir
+            encryptForm.reset();
+            document.getElementById("image-upload").value = ""; // Reset input file
+            document.getElementById("file-name").classList.add("hidden"); // Sembunyikan nama file
+            document.getElementById("upload-icon").classList.remove("hidden"); // Tampilkan ikon upload
+
+            loadingIndicatorEncrypt.classList.add("hidden");
+          })
+
+          .catch((error) => {
+            console.error("Error:", error);
+            loadingIndicatorEncrypt.classList.add("hidden");
+            alert("An error occurred during encryption.");
+          });
+      });
+    }
+
+    if (decryptForm) {
+      decryptForm.addEventListener("submit", function (event) {
+        event.preventDefault();
+
+        const formData = new FormData(decryptForm);
+        formData.append("action", "decrypt");
+
+        loadingIndicatorDecrypt.classList.remove("hidden");
+
+        fetch("/Steganografi", {
+          method: "POST",
+          body: formData,
+        })
+          .then((response) => {
+            console.log(`Response Status: ${response.status}`);
+            if (!response.ok) {
+              // Coba parsing sebagai JSON, jika gagal lempar error
+              return response.json().catch(() => {
+                console.error(`Error response: ${text}`);
+                throw new Error("Server response was not ok");
+              });
+            }
+            return response.json();
+          })
+          .then((data) => {
+            console.log("decrypted message:", data);
+            loadingIndicatorDecrypt.classList.add("hidden");
+            // Update the decrypted message display
+            document.getElementById("decrypted_message").textContent =
+              data.decrypted_message || "No decrypted message available";
+
+            // Reset formulir
+            decryptForm.reset();
+            document.getElementById("encrypted-image-upload").value = ""; // Reset input file
+            document.getElementById("file-name2").classList.add("hidden"); // Sembunyikan nama file
+            document.getElementById("upload-icon2").classList.remove("hidden"); // Tampilkan ikon upload
+
+            loadingIndicatorDecrypt.classList.add("hidden");
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+            loadingIndicatorDecrypt.classList.add("hidden");
+            alert("An error occurred during decryption." + error.message);
+          });
+      });
+    }
+  });
+  document
+    .getElementById("generateKeyLink")
+    .addEventListener("click", function (event) {
+      event.preventDefault();
+
+      // Ambil nilai AES bit selection
+      const aesBitSelection = document.querySelector(
+        "select[name='aes_bit_selection']"
+      ).value;
+
+      // Kirim permintaan ke backend
+      fetch(`/generate_key?bit=${aesBitSelection}`)
+        .then((response) => {
+          if (!response.ok) {
+            return response.json().then((err) => {
+              throw new Error(err.error || "Failed to generate key");
+            });
+          }
+          return response.json();
+        })
+        .then((data) => {
+          if (data.base64_key) {
+            const input = document.getElementById("encryptionKeyInput");
+            input.value = data.base64_key;
+
+            // Optional: Tambahkan informasi visual
+            console.log(
+              `Generated ${data.bit_size}-bit key (${data.key_length} bytes)`
+            );
+          } else {
+            throw new Error("Invalid response format");
+          }
+        })
+        .catch((error) => {
+          console.error("Error generating key:", error.message);
+          alert(`Failed to generate encryption key: ${error.message}`);
+        });
+    });
+  document.addEventListener("DOMContentLoaded", function () {
+    const imageUpload = document.getElementById("image-upload");
+    const encryptedImageUpload = document.getElementById(
+      "encrypted-image-upload"
+    );
+    const fileNameElement = document.getElementById("file-name");
+    const fileNameElement2 = document.getElementById("file-name2");
+    const uploadIcon = document.getElementById("upload-icon");
+    const uploadIcon2 = document.getElementById("upload-icon2");
+
+    function handleFileUpload(
+      inputElement,
+      iconElement,
+      fileNameElement,
+      clearOtherInput
+    ) {
+      const file = inputElement.files[0];
+      if (file) {
+        // Tampilkan nama file
+        fileNameElement.textContent = file.name;
+        fileNameElement.classList.remove("hidden");
+
+        // Hapus file dari input lainnya
+        if (clearOtherInput) {
+          clearOtherInput();
+        }
+      } else {
+        // Reset jika tidak ada file
+        fileNameElement.textContent = "";
+        fileNameElement.classList.add("hidden");
+        iconElement.classList.remove("hidden");
+      }
+    }
+    function clearEncryptionInput() {
+      imageUpload.Value = ""; //Hapus file dari input enkripsi
+      fileNameElement.textContent = "";
+      fileNameElement.classList.add("hidden");
+      uploadIcon.classList.remove("hidden");
+    }
+
+    function clearDecryptionInput() {
+      imageUpload.Value = ""; //Hapus file dari input enkripsi
+      fileNameElement2.textContent = "";
+      fileNameElement2.classList.add("hidden");
+      uploadIcon2.classList.remove("hidden");
+    }
+
+    imageUpload.addEventListener("change", function () {
+      handleFileUpload(
+        imageUpload,
+        uploadIcon,
+        fileNameElement,
+        clearDecryptionInput
+      );
+    });
+    encryptedImageUpload.addEventListener("change", function () {
+      handleFileUpload(
+        encryptedImageUpload,
+        uploadIcon2,
+        fileNameElement2,
+        clearEncryptionInput
+      );
+    });
+  });
+  document.getElementById("copyKeyButton").addEventListener("click", () => {
+    // Copy key ke clipboard
+    const encryptionKeyInput =
+      document.getElementById("encryptionKeyInput").value;
+    copyToClipboard(encryptionKeyInput);
+  });
+  function copyToClipboard(content) {
+    navigator.clipboard
+      .writeText(content)
+      .then(() => {
+        alert("Key copied to clipboard!");
+      })
+      .catch((err) => {
+        console.error("Failed to copy key: ", err);
+        alert("Failed to copy key");
+      });
+  }
+</script>
+{% endblock %}

@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://ai-public.creatie.ai/gen_page/tailwind-custom.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+    />
+    <script src="https://cdn.tailwindcss.com/3.4.5?plugins=forms@0.5.7,typography@0.5.13,aspect-ratio@0.4.2,container-queries@0.1.1"></script>
+    <script
+      src="https://ai-public.creatie.ai/gen_page/tailwind-config.min.js"
+      data-color="#000000"
+      data-border-radius="medium"
+    ></script>
+    <script>
+      window.addEventListener("load", function () {
+        if (typeof jQuery === "undefined") {
+          console.error("jQuery not loaded!");
+        }
+        if (typeof toastr === "undefined") {
+          console.error("Toastr not loaded!");
+        }
+
+        // Initialize Toastr with debug
+        if (typeof toastr !== "undefined") {
+          toastr.options = {
+            closeButton: true,
+            debug: true,
+            newestOnTop: true,
+            progressBar: true,
+            positionClass: "toast-top-right",
+            preventDuplicates: false,
+            showDuration: "300",
+            hideDuration: "1000",
+            timeOut: "5000",
+            extendedTimeOut: "1000",
+            showEasing: "swing",
+            hideEasing: "linear",
+            showMethod: "fadeIn",
+            hideMethod: "fadeOut",
+            onclick: null,
+          };
+        }
+      });
+    </script>
+    <title>{% block title %}Home{% endblock %}</title>
+  </head>
+  <body class="bg-gray-50 min-h-screen overflow-auto">
+    <!-- Upper Navbar -->
+    <nav class="bg-white shadow top-0 z-50 sticky">
+      <div class="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between h-16">
+          <div class="flex">
+            <div class="flex-shrink-0 flex items-center">
+              <img
+                class="h-4 w-15"
+                src="{{ url_for ('static', filename='logo_pbl.png') }}"
+                alt="Logo"
+              />
+            </div>
+            <!-- Navigation Links -->
+            <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
+              <a
+                href="/Home"
+                class="border-transparent click:border-black- text-gray-500 hover:border-gray-300 hover:text-gray-700 focus:border-black inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
+              >
+                Home
+              </a>
+              <a
+                href="/history"
+                class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 focus:border-black inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
+              >
+                History
+              </a>
+            </div>
+          </div>
+          {% if user.is_authenticated %}
+          <div class="flex items-center space-x-4">
+            <a
+              href="/logout"
+              class="text-sm font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-100 px-3 py-2 rounded-md"
+              >Logout</a
+            >
+          </div>
+          {% else %}
+          <div class="flex items-center space-x-4">
+            <a
+              href="/login"
+              class="text-sm font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-100 px-3 py-2 rounded-md"
+              >Sign-In</a
+            >
+            <a
+              href="/sign-up"
+              class="!rounded-button bg-custom text-white px-4 py-2 text-sm font-medium"
+              >Sign-Up</a
+            >
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </nav>
+    <div class="flex-h-screen overflow-auto">
+      {% block content %} {% endblock %} {% block sidebar %} {% endblock %}
+    </div>
+    <div>
+      {% with messages = get_flashed_messages(with_categories=true) %} {% if
+      messages %}
+      <ul>
+        {% for category, message in messages %}
+        <li>{{ category }}: {{ message }}</li>
+        <!-- Debug output -->
+        {% endfor %}
+      </ul>
+      {% endif %} {% endwith %}
+    </div>
+    <script>
+        // Menunggu 2 detik setelah halaman dimuat, lalu menghapus notifikasi
+        document.addEventListener("DOMContentLoaded", function () {
+          // Mendapatkan semua elemen dengan kelas 'alert-message'
+          const alerts = document.querySelectorAll(".alert-message");
+
+          // Menambahkan timeout untuk setiap alert agar hilang setelah 2 detik
+          alerts.forEach(function (alert) {
+            setTimeout(function () {
+              alert.style.display = "none";
+            }, 2000); // 2000 ms = 2 detik
+          });
+        });
+        $(document).ready(function() {
+          {% with messages = get_flashed_messages(with_categories=true) %}
+              {% if messages %}
+                  {% for category, message in messages %}
+                      console.log('Attempting to show message:', '{{ message }}', 'Category:', '{{ category }}');
+                      var type = '{{ category }}';
+                      if (type === 'message') type = 'info';
+                      if (typeof toastr !== 'undefined') {
+                          toastr[type]('{{ message }}');
+                      } else {
+                          console.error('Toastr not available for message:', '{{ message }}');
+                      }
+                  {% endfor %}
+              {% else %}
+                  console.log('No flash messages found');
+              {% endif %}
+          {% endwith %}
+      });
+    </script>
+  </body>
+</html>

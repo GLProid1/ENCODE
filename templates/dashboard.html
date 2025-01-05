@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://ai-public.creatie.ai/gen_page/tailwind-custom.css"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com/3.4.5?plugins=forms@0.5.7,typography@0.5.13,aspect-ratio@0.4.2,container-queries@0.1.1"></script>
+    <script
+      src="https://ai-public.creatie.ai/gen_page/tailwind-config.min.js"
+      data-color="#000000"
+      data-border-radius="medium"
+    ></script>
+    <title>{% block title %}EnCode | Landing Page{% endblock %}</title>
+  </head>
+  <body class="bg-gray-50 min-h-screen">
+    <!-- Upper Navbar -->
+    <nav class="bg-white shadow">
+      <div class="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between h-16">
+          <div class="flex">
+            <div class="flex-shrink-0 flex items-center">
+              <img
+                class="h-4 w-15"
+                src="{{ url_for ('static', filename='logo_pbl.png') }}"
+                alt="Logo"
+              />
+            </div>
+            <!-- Navigation Links -->
+            <div class="hidden sm:ml-6 sm:flex sm:space-x-8"></div>
+          </div>
+          <div class="flex items-center space-x-4">
+            <a
+              href="/login"
+              class="!rounded-button bg-custom text-white px-4 py-2 text-sm font-medium"
+              >Get Started</a
+            >
+          </div>
+        </div>
+      </div>
+    </nav>
+    <div class="text-center pt-20">
+      <h2 class="text-4xl tracking-tight font-bold text-gray-900 sm:text-5xl md:textxl">Welcome to PBL RKS 2024</h2>
+      <p class="mt-4 text-lg text-gray-600">
+        Here you can find more about our services and offerings. Feel free to
+        explore and get started!
+      </p>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,479 @@
+{% extends "home.html" %} {% block title %}Encode | Encryption{% endblock %} {%
+block encrypt %}
+<body class="min-h-screen bg-gray-50 flex flex-col">
+  <main class="flex-grow container mx-auto max-w-5xl">
+    <div class="bg-white rounded-lg shadow-sm p-6">
+      <div class="mb-6">
+        <div class="border-b border-gray-200">
+          <nav class="-mb-px flex space-x-8">
+            <button
+              class="tab-btn !rounded-button border-custom text-custom px-4 py-2 font-medium text-sm border-b-2"
+              data-tab="text"
+            >
+              <i class="fas fa-shield-alt mr-2"></i>Text Encryption
+            </button>
+            <button
+              class="tab-btn !rounded-button text-gray-500 px-4 py-2 font-medium text-sm border-b-2 border-transparent hover:border-gray-300"
+              data-tab="file"
+            >
+              <i class="fas fa-file mr-2"></i>File Encryption
+            </button>
+          </nav>
+        </div>
+      </div>
+      <div id="text-panel" class="tab-panel">
+        <div class="space-y-6">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2"
+              >Input Text</label
+            >
+            <textarea
+              id="input-text"
+              rows="4"
+              class="w-full rounded-md border-gray-300 shadow-sm focus:border-custom focus:ring focus:ring-custom focus:ring-opacity-50"
+              placeholder="Enter text to encrypt/decrypt"
+            ></textarea>
+          </div>
+          <div class="relative">
+            <label class="block text-sm font-medium text-gray-700 mb-2"
+              >Encryption Key</label
+            >
+            <div class="flex items-center">
+              <input
+                type="text"
+                id="text-key"
+                class="w-full rounded-md border-gray-300 shadow-sm focus:border-custom focus:ring focus:ring-custom focus:ring-opacity-50 pr-10"
+                placeholder="Enter your key"
+              />
+              <button
+                id="copyKeyButton"
+                type="button"
+                class="ml-2 px-3 py-1 bg-custom text-white rounded-md hover:bg-custom-600 focus: outline-none focus:ring-2 focus:ring-offset-2 focus:ring-custom"
+              >
+                <i class="fas fa-copy"></i>
+              </button>
+            </div>
+            <div class="text-right px-12">
+              <span
+                id="generateKeyLink"
+                class="text-gray-500 text-xs cursor-pointer hover:underline"
+              >
+                Generate Key?<i class="fas fa-key"></i>
+              </span>
+            </div>
+          </div>
+          <div class="flex space-x-4">
+            <button
+              id="encrypt-text"
+              class="!rounded-button bg-custom text-white px-4 py-2 font-medium hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-custom"
+            >
+              <i class="fas fa-lock mr-2"></i>Encrypt
+            </button>
+            <button
+              id="decrypt-text"
+              class="!rounded-button bg-white text-custom border border-custom px-4 py-2 font-medium hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-custom"
+            >
+              <i class="fas fa-unlock mr-2"></i>Decrypt
+            </button>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2"
+              >Result</label
+            >
+            <div class="relative">
+              <textarea
+                id="result-text"
+                rows="4"
+                class="w-full rounded-md border-gray-300 shadow-sm focus:border-custom focus:ring focus:ring-custom focus:ring-opacity-50"
+                readonly=""
+              ></textarea>
+              <button
+                id="copy-result"
+                class="!rounded-button absolute right-2 top-2 bg-gray-100 text-gray-600 px-3 py-1 text-sm hover:bg-gray-200 focus:outline-none"
+              >
+                <i class="fas fa-copy mr-1"></i>Copy
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="file-panel" class="tab-panel hidden">
+        <div class="space-y-6">
+          <div
+            class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-custom transition-colors duration-200"
+          >
+            <div class="space-y-2">
+              <i
+                id="upload-icon"
+                class="fas fa-cloud-upload-alt text-3xl text-gray-400"
+              ></i>
+              <div id="file-name" class="text-sm text-gray-600 hidden"></div>
+              <div class="text-sm text-gray-600">
+                <label
+                  class="relative cursor-pointer rounded-md font-medium text-custom hover:text-custom-600 focus-within:outline-none"
+                >
+                  <span>Upload an file</span>
+                  <input
+                    id="file-input"
+                    type="file"
+                    class="sr-only"
+                    accept=".pdf, .docx, .doc, .txt, .xlsx, .csv, .sql"
+                    name="file"
+                    required
+                  />
+                </label>
+                <p class="pl-1">or drag and drop</p>
+              </div>
+              <p class="text-xs text-gray-500">PDF, DOCX, DOC, TXT</p>
+            </div>
+          </div>
+          <div class="relative">
+            <label class="block text-sm font-medium text-gray-700 mb-2"
+              >Encryption Key</label
+            >
+            <div class="flex items-center">
+              <input
+                type="text"
+                id="file-key"
+                class="w-full rounded-md border-gray-300 shadow-sm focus:border-custom focus:ring focus:ring-custom focus:ring-opacity-50"
+                placeholder="Enter your key"
+              />
+              <button
+                id="copyKeyButtonFile"
+                type="button"
+                class="ml-2 px-3 py-1 bg-custom text-white rounded-md hover:bg-custom-600 focus: outline-none focus:ring-2 focus:ring-offset-2 focus:ring-custom"
+              >
+                <i class="fas fa-copy"></i>
+              </button>
+            </div>
+            <div class="text-right px-12">
+              <span
+                id="generateKeyLinkFile"
+                class="text-gray-500 text-xs cursor-pointer hover:underline"
+              >
+                Generate Key?<i class="fas fa-key"></i>
+              </span>
+            </div>
+          </div>
+          <div class="flex space-x-4">
+            <button
+              id="encrypt-file"
+              class="!rounded-button bg-custom text-white px-4 py-2 font-medium hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-custom"
+            >
+              <i class="fas fa-lock mr-2"></i>Encrypt File
+            </button>
+            <button
+              id="decrypt-file"
+              class="!rounded-button bg-white text-custom border border-custom px-4 py-2 font-medium hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-custom"
+            >
+              <i class="fas fa-unlock mr-2"></i>Decrypt File
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="mt-8 border-t pt-6">
+        <details class="group">
+          <summary class="flex items-center cursor-pointer">
+            <h2 class="text-lg font-medium text-gray-900">
+              About Our Encryption System
+            </h2>
+            <span class="ml-2 text-gray-500 group-open:rotate-180">
+              <i class="fas fa-chevron-down"></i>
+            </span>
+          </summary>
+          <div class="mt-4 text-gray-600 space-y-4">
+            <p>
+              The Vigenère cipher is a polyalphabetic substitution cipher that
+              uses a keyword to encrypt and decrypt messages. It was first
+              described by Giovan Battista Bellaso in 1553 but misattributed to
+              Blaise de Vigenère in the 19th century.
+            </p>
+            <h3 class="font-medium text-gray-900">How to use:</h3>
+            <ol class="list-decimal list-inside space-y-2">
+              <li>Enter your text or upload a file</li>
+              <li>Provide an encryption key</li>
+              <li>Click Encrypt or Decrypt button</li>
+              <li>Copy or download the result</li>
+            </ol>
+            <p class="text-sm text-gray-500">
+              <i class="fas fa-shield-alt mr-2"></i>Note: While the Vigenère
+              cipher is an interesting historical cipher, it is not secure for
+              modern cryptographic needs.
+            </p>
+          </div>
+        </details>
+      </div>
+    </div>
+  </main>
+</body>
+<script>
+  document.querySelectorAll(".tab-btn").forEach((button) => {
+    button.addEventListener("click", () => {
+      document.querySelectorAll(".tab-btn").forEach((btn) => {
+        btn.classList.remove("border-custom", "text-custom");
+        btn.classList.add("text-gray-500", "border-transparent");
+      });
+      button.classList.remove("text-gray-500", "border-transparent");
+      button.classList.add("border-custom", "text-custom");
+      document.querySelectorAll(".tab-panel").forEach((panel) => {
+        panel.classList.add("hidden");
+      });
+      document
+        .getElementById(`${button.dataset.tab}-panel`)
+        .classList.remove("hidden");
+    });
+  });
+  const backendUrl = "/Encrypt&Decrypt"; // Update URL backend
+  document.getElementById("encrypt-text").addEventListener("click", () => {
+    const text = document.getElementById("input-text").value;
+    const key = document.getElementById("text-key").value;
+
+    if (!key || key.length < 1) {
+      alert("Key cannot be empty!");
+      return;
+    }
+
+    fetch(backendUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        text: text,
+        key: key,
+        action: "encrypt",
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.error) {
+          alert(data.error);
+        } else {
+          document.getElementById("result-text").value = data.result;
+        }
+      })
+      .catch((error) => console.error("Error:", error));
+  });
+
+  document.getElementById("decrypt-text").addEventListener("click", () => {
+    const text = document.getElementById("input-text").value;
+    const key = document.getElementById("text-key").value;
+
+    if (!key || key.length < 1) {
+      alert("Key cannot be empty!");
+      return;
+    }
+
+    fetch(backendUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        text: text,
+        key: key,
+        action: "decrypt",
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.error) {
+          alert(data.error);
+        } else {
+          document.getElementById("result-text").value = data.result;
+        }
+      })
+      .catch((error) => console.error("Error:", error));
+  });
+
+  function handleFile(file, action) {
+    const key = document.getElementById("file-key").value;
+
+    if (!key || key.length < 1) {
+      alert("Key cannot be empty!");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("key", key);
+    formData.append("action", action);
+
+    fetch(backendUrl, {
+      method: "POST",
+      body: formData,
+    })
+      .then(async (response) => {
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.error || "Failed to process file.");
+        }
+        // Ambil nama file dari header
+        const contentDisposition = response.headers.get("Content-Disposition");
+        const filename = contentDisposition
+          ? contentDisposition.split("filename=")[1].replace(/"/g, "") // Ekstrak nama file
+          : `result${action === "encrypt" ? ".enc" : ""}`;
+        return response.blob().then((blob) => ({ blob, filename }));
+      })
+      .then(({ blob, filename }) => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        alert(error.message || "Failed to process file.");
+      });
+  }
+
+  document.getElementById("encrypt-file").addEventListener("click", () => {
+    const fileInput = document.getElementById("file-input");
+    if (!fileInput.files[0]) {
+      alert("Please select a file!");
+      return;
+    }
+    handleFile(fileInput.files[0], "encrypt");
+  });
+
+  document.getElementById("decrypt-file").addEventListener("click", () => {
+    const fileInput = document.getElementById("file-input");
+    if (!fileInput.files[0]) {
+      alert("Please select a file!");
+      return;
+    }
+    if (!fileInput.files[0].name.startsWith("encrypt_")) {
+      alert("Please select an encrypted file (encrypt_*)!");
+      return;
+    }
+    handleFile(fileInput.files[0], "decrypt");
+  });
+
+  const dropZone = document.querySelector(".border-dashed");
+  dropZone.addEventListener("dragover", (e) => {
+    e.preventDefault();
+    dropZone.classList.add("border-custom");
+  });
+
+  dropZone.addEventListener("dragleave", () => {
+    dropZone.classList.remove("border-custom");
+  });
+
+  dropZone.addEventListener("drop", (e) => {
+    e.preventDefault();
+    dropZone.classList.remove("border-custom");
+    const file = e.dataTransfer.files[0];
+    handleFile(file, "encrypt"); // Default action is encrypt on drop
+  });
+  document.getElementById("copy-result").addEventListener("click", () => {
+    const resultText = document.getElementById("result-text").value;
+    copyToClipboard(resultText);
+  });
+  function copyToClipboard(content) {
+    navigator.clipboard
+      .writeText(content)
+      .then(() => {
+        alert("Text copied to clipboard"); // Tampilkan notifikasi
+      })
+      .catch((err) => {
+        console.error("Failed to copy text: ", err);
+        alert("Failed to copy text.");
+      });
+  }
+  document.addEventListener("DOMContentLoaded", function () {
+    const fileInput = document.getElementById("file-input");
+    const uploadIcon = document.getElementById("upload-icon");
+    const fileNameElement = document.getElementById("file-name");
+
+    fileInput.addEventListener("change", function (event) {
+      const file = event.target.files[0];
+      if (file) {
+        // Tampilkan nama file
+        fileNameElement.textContent = file.name;
+        fileNameElement.classList.remove("hidden");
+
+        // Hapus file dari input lainnya
+      } else {
+        // Reset jika tidak ada file
+        fileNameElement.textContent = "";
+        fileNameElement.classList.add("hidden");
+        uploadIcon.style.marginBottom = "0";
+      }
+    });
+  });
+  function generateKey(length = 12) {
+    const uppercaseChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    const lowercaseChars = "abcdefghijklmnopqrstuvwxyz";
+    const numberChars = "0123456789";
+    const specialChars = "!@#$%^&*()_+-=[]{}|;:,.<>?";
+
+    const allChars =
+      uppercaseChars + lowercaseChars + numberChars + specialChars;
+
+    // Ensure at least one of each type
+    let key = "";
+    key += uppercaseChars.charAt(
+      Math.floor(Math.random() * uppercaseChars.length)
+    );
+    key += lowercaseChars.charAt(
+      Math.floor(Math.random() * lowercaseChars.length)
+    );
+    key += numberChars.charAt(Math.floor(Math.random() * numberChars.length));
+    key += specialChars.charAt(Math.floor(Math.random() * specialChars.length));
+
+    // Fill the rest randomly
+    for (let i = key.length; i < length; i++) {
+      key += allChars.charAt(Math.floor(Math.random() * allChars.length));
+    }
+    // shuffle the key
+    return key
+      .split("")
+      .sort(() => Math.random() - 0.5)
+      .join("");
+  }
+
+  // Add event listener untuk generate key
+  document.getElementById("generateKeyLink").addEventListener("click", () => {
+    const key = generateKey();
+    document.getElementById("text-key").value = key;
+  });
+  document
+    .getElementById("generateKeyLinkFile")
+    .addEventListener("click", () => {
+      const key = generateKey();
+      document.getElementById("file-key").value = key;
+    });
+  document.getElementById("copyKeyButton").addEventListener("click", () => {
+    const keyValue = document.getElementById("text-key").value;
+    if (keyValue) {
+      navigator.clipboard
+        .writeText(keyValue)
+        .then(() => {
+          alert("Key copied to clipboard!.");
+        })
+        .catch((err) => {
+          console.error("Failed to copy key:", err);
+          alert("Failed to copy key");
+        });
+    }
+  });
+  document.getElementById("copyKeyButtonFile").addEventListener("click", () => {
+    const keyValue = document.getElementById("file-key").value;
+    if (keyValue) {
+      navigator.clipboard
+        .writeText(keyValue)
+        .then(() => {
+          alert("Key copied to clipboard!.");
+        })
+        .catch((err) => {
+          console.error("Failed to copy key:", err);
+          alert("Failed to copy key");
+        });
+    }
+  });
+</script>
+{% endblock %}

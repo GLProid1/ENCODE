@@ -1,0 +1,42 @@
+{% extends "base.html" %} {% block title %}EnCode | Home{% endblock %} {% block
+sidebar %}
+<div class="flex h-screen overflow-hidden">
+  <!-- Sidebar -->
+  <aside
+    class="w-64 bg-white shadow-md h-full fixed top-16 left-0 overflow-auto"
+  >
+    <div class="p-4 border-b">
+      <h2 class="text-lg font-semibold text-gray-700">Menu</h2>
+    </div>
+    <nav class="mt-4">
+      <ul class="space-y-2">
+        <li>
+          <a
+            href="{{ url_for('Encrypt_Decrypt') }}"
+            class="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-200"
+          >
+            <i class="fas fa-lock mr-3"></i> Encrypt and Decrypt
+          </a>
+        </li>
+        <li>
+          <a
+            href="{{ url_for('steganografi') }}"
+            class="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-200"
+          >
+            <i class="fas fa-eye-slash mr-3"></i> Steganografi
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </aside>
+
+  <!-- Konten Dinamis -->
+  <div class="flex-grow ml-64 p-6 bg-gray-100 overflow-auto">
+    {% if is_home_page %}
+    <h1 class="text-3xl font-bold">Hi, {{ full_name }}! 👋</h1>
+    <p class="text-gray-600">Silakan pilih menu di sidebar.</p>
+    {% else %} {% block content%} {% endblock%} {% block encrypt %} {% endblock
+    %} {% block steganografi %} {% endblock %} {% endif %}
+  </div>
+</div>
+{% endblock %}
